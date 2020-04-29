@@ -5,35 +5,35 @@ from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By 
 import time 
 
-# Replace below path with the absolute path 
-# to chromedriver in your computer 
+# Initialising driver + whatsapp
 driver = webdriver.Chrome('./chromedriver') 
-
 driver.get("https://web.whatsapp.com/") 
 wait = WebDriverWait(driver, 600) 
+print("Scan QR Code then press enter...")
+input()
 
-# Replace 'Friend's Name' with the name of your friend 
-# or the name of a group 
-target = 'L6 Further Maths'
+target = 'Poppy'
 count = int(input("Enter count: "))
-# Replace the below string with your own message 
-string = "bruh"
+string = "🥰"
 
-x_arg = '//span[contains(@title,"' + target + '")]'
-group_title = wait.until(EC.presence_of_element_located(( 
-	By.XPATH, x_arg))) 
-group_title.click() 
 
-print("Found Target")
+def send_text_message(message): #' sends a message to the currently open contact'
+	inp_xpath = '//*[@id="main"]//footer//div[contains(@contenteditable, "true")]'
+	input_box = wait.until(EC.presence_of_element_located(( 
+		By.XPATH, inp_xpath))) 
+	print(f'Sending {message} to {input_box}')
+	input_box.click()
+	input_box.send_keys(message)
+	input_box.send_keys(Keys.ENTER)
 
-inp_xpath = '//*[@id="main"]//footer//div[contains(@contenteditable, "true")]'
-input_box = wait.until(EC.presence_of_element_located(( 
-	By.XPATH, inp_xpath))) 
+def select_contact(contact_name): # Clicks on target name in sidebar, openening chat window
+	x_arg = '//span[contains(@title,"' + target + '")]'
+	group_title = wait.until(EC.presence_of_element_located(( 
+		By.XPATH, x_arg))) 
+	group_title.click() 
+	print("Found Target")
 
-print("Found input ", input_box)
+select_contact(target)
 
-input_box.click()
-
-for i in range(count): 
-	input_box.send_keys(string)
-	input_box.send_keys(Keys.ENTER) 
+for i in range(count):
+	send_text_message(string)
